@@ -171,6 +171,11 @@ static void board_init_adjust_env(void)
 extern char bootloader_ver[24];
 int board_late_init(void)
 {
+	__raw_writel(0xffff0001, (void __iomem *)0xff77e640);
+
+	printf("enable pcie power\n");
+	gpio_direction_output(GPIO_BANK2 | GPIO_A5, 1);
+
 	debug("board_late_init\n");
 
 	board_init_adjust_env();
