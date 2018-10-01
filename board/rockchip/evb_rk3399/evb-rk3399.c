@@ -11,6 +11,9 @@
 #include <dm/uclass-internal.h>
 #include <asm/setup.h>
 #include <asm/arch/periph.h>
+#include <asm/gpio.h>
+#include <asm/io.h>
+
 #include <power/regulator.h>
 #include <u-boot/sha256.h>
 #include <usb.h>
@@ -71,6 +74,7 @@ int board_init(void)
 		debug("%s vcc5v0-host-en set fail!\n", __func__);
 		goto out;
 	}
+
 
 out:
 	return 0;
@@ -167,6 +171,14 @@ static void setup_serial(void)
 
 int misc_init_r(void)
 {
+
+	puts("Pcie:  Enable Power\n");
+
+	__raw_writel(0xffff0001, (void __iomem *)0xff77e640);
+
+	gpio_request(69, "pcie-power"); /* GPIO2_A5 */
+	gpio_direction_output(69, 1);
+
 	setup_serial();
 	setup_macaddr();
 
