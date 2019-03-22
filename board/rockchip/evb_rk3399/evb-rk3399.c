@@ -10,6 +10,8 @@
 #include <ram.h>
 #include <dm/pinctrl.h>
 #include <dm/uclass-internal.h>
+#include <asm/io.h>
+#include <asm/gpio.h>
 #include <asm/setup.h>
 #include <asm/arch/periph.h>
 #include <power/regulator.h>
@@ -27,6 +29,12 @@ int rk_board_init(void)
 {
 	struct udevice *pinctrl, *regulator;
 	int ret;
+
+	if(gpio_request(53, "gpio2_a5,pcie_en") == 0){
+		printf("enable pcie power,gpio2_a5\n");
+		__raw_writel(0xffff0001, (void __iomem *)0xff77e640);
+		gpio_direction_output(53, 1);
+	}
 
 	/*
 	 * The PWM does not have decicated interrupt number in dts and can
