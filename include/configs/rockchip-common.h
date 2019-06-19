@@ -124,6 +124,11 @@
 
 #define RKIMG_DET_BOOTDEV \
 	"rkimg_bootdev=" \
+	"dcache off; echo dcache off; pci e;nvme scan;"	\
+	"if nvme dev 0; then " \
+		"setenv devtype nvme; setenv devnum 0;" \
+	"else " \
+	"dcache on; echo dcache on;" \
 	"if mmc dev 1 && rkimgtest mmc 1; then " \
 		"setenv devtype mmc; setenv devnum 1; echo Boot from SDcard;" \
 	"elif mmc dev 0; then " \
@@ -134,6 +139,7 @@
 		"setenv devtype spinand; setenv devnum 0;" \
 	"elif rksfc dev 1; then " \
 		"setenv devtype spinor; setenv devnum 1;" \
+	"fi;" \
 	"fi; \0"
 
 #ifdef CONFIG_AVB_VBMETA_PUBLIC_KEY_VALIDATE
