@@ -238,41 +238,6 @@ static void early_bootrom_download(void)
 #endif
 }
 
-static void pcie_sata_switch(void)
-{
-	unsigned int det_pcie_sata_gpio = 10;
-	unsigned int switch_ctrl_gpio = 150;
-	unsigned int gms561_rst_gpio = 152;
-	int ret;
-
-	ret = gpio_request(gms561_rst_gpio, "gms561_rst_gpio");
-	if (ret && ret != -EBUSY) {
-		debug("gpio: requesting pin %u failed\n", gms561_rst_gpio);
-	}
-
-	ret = gpio_request(det_pcie_sata_gpio, "det_pcie_sata_gpio");
-	if (ret && ret != -EBUSY) {
-		debug("gpio: requesting pin %u failed\n", det_pcie_sata_gpio);
-	}
-
-	ret = gpio_request(switch_ctrl_gpio, "switch_ctrl_gpio");
-	if (ret && ret != -EBUSY) {
-		debug("gpio: requesting pin %u failed\n", switch_ctrl_gpio);
-	}
-
-	gpio_direction_output(gms561_rst_gpio, 0);
-	gpio_direction_input(det_pcie_sata_gpio);
-	gpio_direction_output(switch_ctrl_gpio, 1);
-
-	if(gpio_get_value(det_pcie_sata_gpio)) {
-		gpio_set_value(switch_ctrl_gpio, 0);
-	} else {
-		gpio_set_value(switch_ctrl_gpio, 1);
-	}
-	mdelay(50);
-	gpio_set_value(gms561_rst_gpio, 1);
-}
-
 int board_init(void)
 {
 	int ret;
@@ -300,7 +265,6 @@ int board_init(void)
 
 	set_armclk_rate();
 
-	pcie_sata_switch();
 #ifdef CONFIG_DM_DVFS
 	dvfs_init(true);
 #endif
