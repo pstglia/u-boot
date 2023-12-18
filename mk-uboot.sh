@@ -2,8 +2,8 @@
 
 LOCALPATH=$(pwd)
 
-export ARCH=arm64
-export CROSS_COMPILE=${LOCALPATH}/../prebuilts/gcc/linux-x86/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+export ARCH=arm
+export CROSS_COMPILE=${LOCALPATH}/../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
 
 TOOLPATH=${LOCALPATH}/../rkbin/tools
 PATH=$PATH:$TOOLPATH
@@ -20,10 +20,10 @@ make all
 $TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img 0x200000
 #############################################################################################
 echo "make idbloader.img"
-tools/mkimage -n rk3399 -T rksd -d ../rkbin/bin/rk33/rk3399_ddr_800MHz_v1.14.bin idbloader.img
-cat ../rkbin/bin/rk33/rk3399_miniloader_v1.15.bin >> idbloader.img
+tools/mkimage -n rk322x -T rksd -d ../rkbin/bin/rk32/rk322x_ddr_300MHz_v1.07.bin idbloader.img
+cat ../rkbin/bin/rk32/rk322x_miniloader_at_v2.52.bin >> idbloader.img
 #############################################################################################
-cp ../rkbin/bin/rk33/rk3399_loader_v1.12.112.bin .
+#cp ../rkbin/bin/rk32/rk3399_loader_v1.12.112.bin .
 
 #############################################################################################
 cat >trust.ini <<EOF
